@@ -1,0 +1,4 @@
+Crossmeta port of various Linux file systems EXT2, Reiserfs for Windows.
+The EXT2 file system can be used to access EXT3 partitons too.
+The support for ReiserFS is limited to readonly for now.
+Please check http://www.crossmeta.org for more information this project.
