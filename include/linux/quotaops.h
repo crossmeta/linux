@@ -185,4 +185,106 @@ extern __inline__ void DQUOT_FREE_SPACE(struct inode *inode, qsize_t nr)
 #define DQUOT_PREALLOC_BLOCK(inode, nr) DQUOT_ALLOC_SPACE((inode), ((qsize_t)(nr)) << (inode)->i_sb->s_blocksize_bits)
 #define DQUOT_FREE_BLOCK(inode, nr) DQUOT_FREE_SPACE((inode), ((qsize_t)(nr)) << (inode)->i_sb->s_blocksize_bits)
 
+static inline void vfs_dq_init(struct inode *inode)
+{
+}
+
+static inline void vfs_dq_drop(struct inode *inode)
+{
+}
+
+static inline int vfs_dq_alloc_space_nodirty(struct inode *inode, qsize_t nr)
+{
+	inode_add_bytes(inode, nr);
+	return 0;
+}
+
+static inline void vfs_dq_alloc_space_nofail(struct inode *inode, qsize_t nr)
+{
+	inode_add_bytes(inode, nr);
+	mark_inode_dirty(inode);
+}
+
+static inline int vfs_dq_alloc_space(struct inode *inode, qsize_t nr)
+{
+	vfs_dq_alloc_space_nodirty(inode, nr);
+	mark_inode_dirty(inode);
+	return 0;
+}
+
+static inline int vfs_dq_reserve_space(struct inode *inode, qsize_t nr)
+{
+	return 0;
+}
+
+static inline int vfs_dq_claim_space(struct inode *inode, qsize_t nr)
+{
+	return vfs_dq_alloc_space(inode, nr);
+}
+
+static inline
+int vfs_dq_release_reservation_space(struct inode *inode, qsize_t nr)
+{
+	return 0;
+}
+
+static inline void vfs_dq_free_space_nodirty(struct inode *inode, qsize_t nr)
+{
+	inode_sub_bytes(inode, nr);
+}
+
+static inline void vfs_dq_free_space(struct inode *inode, qsize_t nr)
+{
+	vfs_dq_free_space_nodirty(inode, nr);
+	mark_inode_dirty(inode);
+}
+
+
+static inline int vfs_dq_alloc_inode(struct inode *inode)
+{
+	return 0;
+}
+
+static inline void vfs_dq_free_inode(struct inode *inode)
+{
+}
+
+
+static inline int vfs_dq_alloc_block(struct inode *inode, qsize_t nr)
+{
+	return vfs_dq_alloc_space(inode, nr << inode->i_blkbits);
+}
+
+static inline int vfs_dq_reserve_block(struct inode *inode, qsize_t nr)
+{
+	return vfs_dq_reserve_space(inode, nr << inode->i_blkbits);
+}
+
+static inline void vfs_dq_alloc_block_nofail(struct inode *inode, qsize_t nr)
+{
+	vfs_dq_alloc_space_nofail(inode, nr << inode->i_blkbits);
+}
+
+static inline int vfs_dq_claim_block(struct inode *inode, qsize_t nr)
+{
+	return vfs_dq_claim_space(inode, nr << inode->i_blkbits);
+}
+
+static inline
+void vfs_dq_release_reservation_block(struct inode *inode, qsize_t nr)
+{
+	vfs_dq_release_reservation_space(inode, nr << inode->i_blkbits);
+}
+
+static inline void vfs_dq_free_block(struct inode *inode, qsize_t nr)
+{
+	vfs_dq_free_space(inode, nr << inode->i_blkbits);
+}
+
+static inline int vfs_dq_transfer(struct inode *inode, struct iattr *iattr)
+{
+	return 0;
+}
+
+
 #endif /* _LINUX_QUOTAOPS_ */

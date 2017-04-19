@@ -63,6 +63,7 @@ struct dentry {
 	atomic_t d_count;
 	unsigned int d_flags;
 	struct inode *d_inode;
+	struct dentry *d_parent;
 	struct qstr d_name;
 	struct super_block *d_sb;	/* The root of the dentry tree */
 	void *d_fsdata;			/* fs-specific data */
@@ -108,6 +109,8 @@ d_iput:		no		no		yes
 					 * s_nfsd_free_path semaphore will be down
 					 */
 #define DCACHE_REFERENCED	0x0008  /* Recently used, don't discard. */
+
+#define	d_path(d,path,size)	(NULL)
 
 #if 0
 extern spinlock_t dcache_lock;

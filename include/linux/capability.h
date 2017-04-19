@@ -369,6 +369,11 @@ static __inline__ uid_t current_fsuid()
 	return (curproc()->p_ucred->cr_uid);
 }
 
+static __inline__ gid_t current_fsgid()
+{
+	return (curproc()->p_ucred->cr_gid);
+}
+
 static __inline__ int cap_able_cred(struct ucred *cr, int cap)
 {
 	if (cr->cr_uid == 0)

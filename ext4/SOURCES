@@ -1,0 +1,30 @@
+# The sources build file for the EXT4 File System driver:
+
+TARGETNAME=ext4fs
+TARGETPATH=$(VFS_LIB_TARGET)
+TARGETTYPE=DRIVER
+
+!if "$(_BUILDARCH)" != "x86"
+USE_INT64_LIB=0
+!else
+USE_INT64_LIB=1
+!endif
+
+TARGETLIBS= $(VFS_LIB_PATH)\linuxfs.lib \
+	$(VFS_LIB_PATH)\cxvfs.lib  \
+!if $(USE_INT64_LIB)
+	$(BASEDIR)\lib\wnet\*\int64.lib 
+!endif
+
+INCLUDES=..\..\sys;..\include
+C_DEFINES=-D_KERNEL -D__KERNEL__ -D_CXVFS
+!ifdef AMD64
+C_DEFINES= $(C_DEFINES) -D_USE_32BIT_TIME_T
+!endif
+
+SOURCES= balloc.c bitmap.c dir.c file.c fsync.c ialloc.c inode.c \
+	ioctl.c namei.c super.c hash.c resize.c extents.c ext4_jbd2.c \
+	migrate.c mballoc.c block_validity.c move_extent.c  symlink.c \
+	journal.c ext4fs_module.c
+
+386_WARNING_LEVEL=/W2

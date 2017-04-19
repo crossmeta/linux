@@ -8,7 +8,7 @@
 #include <sys/uio.h>
 #include <sys/cred.h>
 #include <sys/conf.h>
-#include <linux/kernel.h>
+//#include <linux/kernel.h>
 
 /*
  * Additional type declarations for XFS
@@ -27,8 +27,20 @@ typedef unsigned char		unchar;
 typedef unsigned short		ushort;                                         
 typedef unsigned int		uint;                                           
 typedef unsigned long		ulong;                                          
-                                        
+
+#ifndef pgoff_t
+#define	pgoff_t	unsigned long
+#endif
+#define __bitwise
+typedef __u16 __bitwise __le16;
+typedef __u16 __bitwise __be16;
+typedef __u32 __bitwise __le32;
+typedef __u32 __bitwise __be32;
+typedef __u64 __bitwise __le64;
+typedef __u64 __bitwise __be64;
+
 #ifdef __KERNEL__
+typedef unsigned __bitwise	gfp_t;
 
 typedef signed char s8;
 typedef unsigned char u8;
@@ -47,6 +59,9 @@ typedef unsigned __int64 u64;
 /* Dma addresses are 32-bits wide.  */
 
 typedef u32 dma_addr_t;
+
+typedef u64 sector_t;
+typedef u64 blkcnt_t;
 
 #endif /* __KERNEL__ */
 
@@ -123,7 +138,7 @@ typedef __kernel_gid16_t	gid16_t;
 #define __inline__	__inline
 #define inline		__inline
 
-#define __FUNCTION__	""
+#define	DEFINE_FUNC(s)	static const char *__func__ = s
 
 #define offsetof(TYPE, MEMBER)	((size_t) &((TYPE *)0)->MEMBER)
 
